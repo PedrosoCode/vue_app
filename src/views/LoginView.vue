@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import MainNavbar from '@/components/MainNavbar.vue'
 import axios from 'axios'
+import { onMounted } from 'vue'
 
 const initCadastro: CadastroState = {
   sEmail: '',
@@ -27,13 +28,16 @@ export interface LoginState {
   nCodigoEmpresa: number
 }
 
+interface cboEmpresaState {
+  nome_fantasia: string
+  razao_social: string
+  codigo: number
+}
+
+const cboEmpresaValues = ref<cboEmpresaState[]>([])
+
 const loginForm = reactive<LoginState>({ ...initLogin })
 const registerForm = reactive<CadastroState>({ ...initCadastro })
-
-const ComboEmpresaValues = [
-  { nome_empresa: 'fantasia 1', codigo: 1 },
-  { nome_empresa: 'fantasia 2', codigo: 2 },
-]
 
 function btnLogarClick() {
   axios
@@ -56,6 +60,20 @@ function btnCadastroClick() {
     .then((response) => console.log(response))
     .catch((error) => console.log(error))
 }
+
+async function loadComboEmpresa() {
+  try {
+    const response = await axios.get('http://localhost:3042/loginsignup/combo/empresas')
+    cboEmpresaValues.value = response.data
+    console.log('Dados carregados:', cboEmpresaValues.value)
+  } catch (error) {
+    console.error('Erro ao carregar empresas:', error)
+  }
+}
+
+onMounted(() => {
+  loadComboEmpresa()
+})
 </script>
 
 <template>
@@ -125,11 +143,11 @@ function btnCadastroClick() {
               >
                 <option value="0">Selecione uma empresa</option>
                 <option
-                  v-for="empresa in ComboEmpresaValues"
+                  v-for="empresa in cboEmpresaValues"
                   :key="empresa.codigo"
                   :value="empresa.codigo"
                 >
-                  {{ empresa.nome_empresa }}
+                  {{ empresa.nome_fantasia }}
                 </option>
               </select>
               <div class="mb-3">
@@ -172,11 +190,11 @@ function btnCadastroClick() {
               >
                 <option value="0">Selecione uma empresa</option>
                 <option
-                  v-for="empresa in ComboEmpresaValues"
+                  v-for="empresa in cboEmpresaValues"
                   :key="empresa.codigo"
                   :value="empresa.codigo"
                 >
-                  {{ empresa.nome_empresa }}
+                  {{ empresa.nome_fantasia }}
                 </option>
               </select>
               <div class="mb-3">
