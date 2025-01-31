@@ -63,7 +63,9 @@ function btnCadastroClick() {
 
 async function loadComboEmpresa() {
   try {
-    const response = await axios.get('http://localhost:3042/loginsignup/combo/empresas')
+    const response = await axios.get(
+      import.meta.env.VITE_DEFAULT_API_LINK + '/loginsignup/combo/empresas',
+    )
     cboEmpresaValues.value = response.data
     console.log('Dados carregados:', cboEmpresaValues.value)
   } catch (error) {
