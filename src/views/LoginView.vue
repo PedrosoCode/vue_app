@@ -5,6 +5,7 @@ import axios from 'axios'
 import { onMounted } from 'vue'
 
 const initCadastro: CadastroState = {
+  sNomeUsuario: '',
   sEmail: '',
   sSenha: '',
   nCodigoEmpresa: 0,
@@ -17,6 +18,7 @@ const initLogin: LoginState = {
 }
 
 export interface CadastroState {
+  sNomeUsuario: string
   sEmail: string
   sSenha: string
   nCodigoEmpresa: number
@@ -52,10 +54,11 @@ function btnLogarClick() {
 
 function btnCadastroClick() {
   axios
-    .post('/user', {
-      email: registerForm.sEmail,
-      senha: registerForm.sSenha,
-      empresa: registerForm.nCodigoEmpresa,
+    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/loginsignup/cadastrar', {
+      sNomeUsuario: registerForm.sNomeUsuario,
+      sEmail: registerForm.sEmail,
+      sSenha: registerForm.sSenha,
+      nCodigoEmpresa: registerForm.nCodigoEmpresa,
     })
     .then((response) => console.log(response))
     .catch((error) => console.log(error))
@@ -174,6 +177,14 @@ onMounted(() => {
             <br />
             <form @submit.prevent="btnCadastroClick">
               <div class="mb-3">
+                <label for="registerUserName" class="form-label">Nome de usuário</label>
+                <input
+                  v-model="registerForm.sNomeUsuario"
+                  placeholder="Seu usuário"
+                  type="text"
+                  class="form-control"
+                  id="registerNomeUsuario"
+                />
                 <label for="registerEmail" class="form-label">Endereço de E-mail</label>
                 <input
                   v-model="registerForm.sEmail"
