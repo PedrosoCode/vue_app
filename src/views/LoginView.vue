@@ -12,7 +12,7 @@ const initCadastro: CadastroState = {
 }
 
 const initLogin: LoginState = {
-  sEmail: '',
+  sNomeUsuario: '',
   sSenha: '',
   nCodigoEmpresa: 0,
 }
@@ -25,7 +25,7 @@ export interface CadastroState {
 }
 
 export interface LoginState {
-  sEmail: string
+  sNomeUsuario: string
   sSenha: string
   nCodigoEmpresa: number
 }
@@ -43,16 +43,18 @@ const registerForm = reactive<CadastroState>({ ...initCadastro })
 
 function btnLogarClick() {
   axios
-    .post('/login', {
-      email: loginForm.sEmail,
-      senha: loginForm.sSenha,
-      empresa: loginForm.nCodigoEmpresa,
+    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/loginsignup/login', {
+      sNomeUsuario: loginForm.sNomeUsuario,
+      sSenha: loginForm.sSenha,
+      nCodigoEmpresa: loginForm.nCodigoEmpresa,
     })
     .then((response) => console.log(response))
     .catch((error) => console.log(error))
 }
 
 function btnCadastroClick() {
+  console.log(registerForm)
+
   axios
     .post(import.meta.env.VITE_DEFAULT_API_LINK + '/loginsignup/cadastrar', {
       sNomeUsuario: registerForm.sNomeUsuario,
@@ -130,13 +132,13 @@ onMounted(() => {
             <br />
             <form @submit.prevent="btnLogarClick">
               <div class="mb-3">
-                <label for="loginEmail" class="form-label">Endereço de E-mail</label>
+                <label for="loginUserName" class="form-label">Usuário</label>
                 <input
-                  v-model="loginForm.sEmail"
-                  placeholder="E-mail"
-                  type="email"
+                  v-model="loginForm.sNomeUsuario"
+                  placeholder="Nome do seu Usuário"
+                  type="text"
                   class="form-control"
-                  id="loginEmail"
+                  id="loginUserName"
                 />
                 <div id="emailHelp" class="form-text">Suas informações estão seguras conosco.</div>
               </div>
