@@ -48,8 +48,15 @@ function btnLogarClick() {
       sSenha: loginForm.sSenha,
       nCodigoEmpresa: loginForm.nCodigoEmpresa,
     })
-    .then((response) => console.log(response))
-    .catch((error) => console.log(error))
+    .then((response) => {
+      localStorage.setItem('jwtToken', response.data.token)
+
+      window.location.href = '/'
+    })
+    .catch((error) => {
+      console.log(error)
+      alert('Login falhou: ' + (error.response?.data?.message || 'Erro desconhecido'))
+    })
 }
 
 function btnCadastroClick() {
