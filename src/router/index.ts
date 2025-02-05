@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import AbouView from '../views/AboutView.vue'
+import MainMenu from '../views/MainMenuView.vue'
+import CadParceiroNegocio from '../views/CadastroParceiroNegocio.vue'
+
 import '../bs/bootstrap-5.3.3-dist/css/bootstrap.min.css'
 import '../bs/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'
 
@@ -11,18 +15,30 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue'),
-      meta: { requiresAuth: true },
+      component: AbouView,
+      // meta: { requiresAuth: true },
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/menu',
+      name: 'menu',
+      component: MainMenu,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/cadparceiro',
+      name: 'cadparceiro',
+      component: CadParceiroNegocio,
+      meta: { requiresAuth: true },
     },
   ],
 })

@@ -12,6 +12,7 @@ import MainNavbar from '@/components/MainNavbar.vue'
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/about">About</RouterLink>
           <RouterLink to="/login">Login</RouterLink>
+          <RouterLink to="/menu">módulos</RouterLink>
         </nav>
       </div>
     </header>
