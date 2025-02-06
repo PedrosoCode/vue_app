@@ -1,5 +1,88 @@
 <script setup lang="ts">
 import MainNavbar from '@/components/MainNavbar.vue'
+import { reactive } from 'vue'
+import axios from 'axios'
+import { onMounted } from 'vue'
+
+interface stFormInfo {
+  sRazaoSocial: string
+  sNomeFantasia: string
+  sTipoParceiro: string
+  sEmail: string
+  sTelefone: string
+  sContato: string
+  sLogradouro: string
+  sBairro: string
+  sComplemento: string
+  sNumero: string
+  sCep: string
+  nCodigoPais: number
+  nCodigoCidade: number
+  nCodigoEstado: number
+}
+
+const stFormInfo = reactive<stFormInfo>({
+  sRazaoSocial: '',
+  sNomeFantasia: '',
+  sTipoParceiro: '',
+  sEmail: '',
+  sTelefone: '',
+  sContato: '',
+  sLogradouro: '',
+  sBairro: '',
+  sComplemento: '',
+  sNumero: '',
+  sCep: '',
+  nCodigoPais: 0,
+  nCodigoCidade: 0,
+  nCodigoEstado: 0,
+})
+
+function btnEnviarClick() {
+  console.log(stFormInfo)
+  axios
+    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/', {
+      sRazaoSocial: stFormInfo.sRazaoSocial,
+      sNomeFantasia: stFormInfo.sNomeFantasia,
+      sTipoParceiro: stFormInfo.sTipoParceiro,
+      sEmail: stFormInfo.sEmail,
+      sTelefone: stFormInfo.sTelefone,
+      sContato: stFormInfo.sContato,
+      sLogradouro: stFormInfo.sLogradouro,
+      sBairro: stFormInfo.sBairro,
+      sComplemento: stFormInfo.sComplemento,
+      sNumero: stFormInfo.sNumero,
+      sCep: stFormInfo.sCep,
+      nCodigoPais: stFormInfo.nCodigoPais,
+      nCodigoCidade: stFormInfo.nCodigoCidade,
+      nCodigoEstado: stFormInfo.nCodigoEstado,
+    })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error))
+}
+
+interface stateCboPais {
+  nCodigoPais: number
+  sNomePais: string
+}
+
+const stCboPais = ref<stateCboPais[]>([])
+
+async function loadComboPais() {
+  try {
+    const data = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/')
+  } catch (error) {
+    console.error('Erro ao carregar combo pais', error)
+  }
+}
+
+async function loadCombos() {
+  loadComboPais()
+}
+
+onMounted(() => {
+  loadCombos()
+})
 </script>
 
 <template>
@@ -16,7 +99,7 @@ import MainNavbar from '@/components/MainNavbar.vue'
         </nav>
       </div>
       <br />
-      <form>
+      <form @submit.prevent="btnEnviarClick">
         <div class="container border border-subtle rounded">
           <div>
             <br />
@@ -40,7 +123,8 @@ import MainNavbar from '@/components/MainNavbar.vue'
                 <div class="mb-3">
                   <label for="" class="form-label">Razão Social</label>
                   <input
-                    type=""
+                    v-model="stFormInfo.sRazaoSocial"
+                    type="text"
                     id=""
                     class="form-control"
                     placeholder="Insira a razão social"
@@ -52,7 +136,8 @@ import MainNavbar from '@/components/MainNavbar.vue'
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Nome Fantasia</label>
                   <input
-                    type=""
+                    v-model="stFormInfo.sNomeFantasia"
+                    type="text"
                     id=""
                     class="form-control"
                     placeholder="Insira o Nome Fantasia"
@@ -62,7 +147,7 @@ import MainNavbar from '@/components/MainNavbar.vue'
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Tipo Parceiro</label>
-                <select id="" class="form-select">
+                <select v-model="stFormInfo.sTipoParceiro" id="" class="form-select">
                   <option selected></option>
                 </select>
               </div>
@@ -71,14 +156,21 @@ import MainNavbar from '@/components/MainNavbar.vue'
               <div class="col-4">
                 <div class="mb-3">
                   <label for="" class="form-label">E-Mail</label>
-                  <input type="" id="" class="form-control" placeholder="Insira o E-mail" />
+                  <input
+                    v-model="stFormInfo.sEmail"
+                    type="text"
+                    id=""
+                    class="form-control"
+                    placeholder="Insira o E-mail"
+                  />
                 </div>
               </div>
               <div class="col-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Telefone</label>
                   <input
-                    type=""
+                    v-model="stFormInfo.sTelefone"
+                    type="text"
                     id=""
                     class="form-control"
                     placeholder="Insira o Telefone"
@@ -89,7 +181,13 @@ import MainNavbar from '@/components/MainNavbar.vue'
               <div class="col-4">
                 <div class="mb-3">
                   <label for="" class="form-label">Contato</label>
-                  <input type="" id="" class="form-control" placeholder="Insira o Contato" />
+                  <input
+                    v-model="stFormInfo.sContato"
+                    type=""
+                    id=""
+                    class="form-control"
+                    placeholder="Insira o Contato"
+                  />
                 </div>
               </div>
             </div>
@@ -98,7 +196,8 @@ import MainNavbar from '@/components/MainNavbar.vue'
                 <div class="mb-3">
                   <label for="" class="form-label">Logradouro</label>
                   <input
-                    type=""
+                    v-model="stFormInfo.sLogradouro"
+                    type="text"
                     id=""
                     class="form-control"
                     placeholder="Insira o logradouro"
@@ -109,14 +208,21 @@ import MainNavbar from '@/components/MainNavbar.vue'
               <div class="col-3">
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Bairro</label>
-                  <input type="" id="" class="form-control" placeholder="Insira o Bairro" />
+                  <input
+                    v-model="stFormInfo.sBairro"
+                    type="text"
+                    id=""
+                    class="form-control"
+                    placeholder="Insira o Bairro"
+                  />
                 </div>
               </div>
               <div class="col-3">
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Complemento</label>
                   <input
-                    type=""
+                    v-model="stFormInfo.sComplemento"
+                    type="text"
                     id=""
                     class="form-control"
                     placeholder="Insira o Complemento caso aplicável"
@@ -129,39 +235,54 @@ import MainNavbar from '@/components/MainNavbar.vue'
               <div class="col-2">
                 <div class="mb-3">
                   <label for="" class="form-label">Número</label>
-                  <input type="" id="" class="form-control" placeholder="Insira o N°" required />
+                  <input
+                    v-model="stFormInfo.sNumero"
+                    type="text"
+                    id=""
+                    class="form-control"
+                    placeholder="Insira o N°"
+                    required
+                  />
                 </div>
               </div>
 
               <div class="col-3">
                 <div class="mb-3">
                   <label for="" class="form-label">CEP</label>
-                  <input type="" id="" class="form-control" placeholder="Insira o CEP" required />
+                  <input
+                    v-model="stFormInfo.sCep"
+                    type="text"
+                    id=""
+                    class="form-control"
+                    placeholder="Insira o CEP"
+                    required
+                  />
                 </div>
               </div>
             </div>
             <div class="row justify-content-start">
               <div class="col-md-3">
                 <label for="" class="form-label">País</label>
-                <select id="" class="form-select mb-3">
+                <select v-model="stFormInfo.nCodigoPais" id="" class="form-select mb-3">
                   <option selected></option>
                 </select>
               </div>
               <div class="col-md-5">
                 <label for="" class="form-label">Cidade</label>
-                <select id="" class="form-select mb-3">
+                <select v-model="stFormInfo.nCodigoCidade" id="" class="form-select mb-3">
                   <option selected></option>
                 </select>
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Estado</label>
-                <select id="" class="form-select mb-3">
+                <select v-model="stFormInfo.nCodigoEstado" id="" class="form-select mb-3">
                   <option selected></option>
                 </select>
               </div>
             </div>
           </div>
         </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
       </form>
     </header>
   </main>
