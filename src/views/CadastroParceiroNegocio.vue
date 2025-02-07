@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MainNavbar from '@/components/MainNavbar.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { onMounted } from 'vue'
 
@@ -38,6 +38,27 @@ const stFormInfo = reactive<stFormInfo>({
   nCodigoEstado: 0,
 })
 
+interface stateCboPais {
+  nCodigoPais: number
+  sNomePais: string
+  nUfCidade: number
+}
+const stCboPais = ref<stateCboPais[]>([])
+
+interface stateComboCidade {
+  nCodigoCidade: number
+  sDescricaoCidade: string
+  nUfCidade: number
+}
+const stCboCidade = ref<stateComboCidade[]>([])
+
+interface stateComboEstado {
+  nCodigoEstado: number
+  sNomeEstado: string
+  sUF: string
+}
+const stCboEstado = ref<stateComboEstado[]>([])
+
 function btnEnviarClick() {
   console.log(stFormInfo)
   axios
@@ -61,23 +82,40 @@ function btnEnviarClick() {
     .catch((error) => console.log(error))
 }
 
-interface stateCboPais {
-  nCodigoPais: number
-  sNomePais: string
-}
-
-const stCboPais = ref<stateCboPais[]>([])
-
 async function loadComboPais() {
   try {
-    const data = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/')
+    const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/pais')
+    stCboPais.value = response.data
+    console.log('Dados carregados:', stCboPais.value)
   } catch (error) {
-    console.error('Erro ao carregar combo pais', error)
+    console.error('Erro ao carregar empresas:', error)
+  }
+}
+
+async function loadComboCidade() {
+  try {
+    const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/cidade')
+    stCboCidade.value = response.data
+    console.log('Dados carregados:', stCboCidade.value)
+  } catch (error) {
+    console.error('Erro ao carregar Cidades:', error)
+  }
+}
+
+async function loadComboEstado() {
+  try {
+    const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/estado')
+    stCboEstado.value = response.data
+    console.log('Dados carregados:', stCboEstado.value)
+  } catch (error) {
+    console.error('Erro ao carregar estados/uf:', error)
   }
 }
 
 async function loadCombos() {
   loadComboPais()
+  loadComboCidade()
+  loadComboEstado()
 }
 
 onMounted(() => {
@@ -264,19 +302,33 @@ onMounted(() => {
               <div class="col-md-3">
                 <label for="" class="form-label">País</label>
                 <select v-model="stFormInfo.nCodigoPais" id="" class="form-select mb-3">
-                  <option selected></option>
+                  <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.sNomePais">
+                    {{ pais.sNomePais }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-5">
                 <label for="" class="form-label">Cidade</label>
                 <select v-model="stFormInfo.nCodigoCidade" id="" class="form-select mb-3">
-                  <option selected></option>
+                  <option
+                    v-for="cidade in stCboCidade"
+                    :key="cidade.nCodigoCidade"
+                    :value="cidade.sDescricaoCidade"
+                  >
+                    {{ cidade.sDescricaoCidade }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Estado</label>
                 <select v-model="stFormInfo.nCodigoEstado" id="" class="form-select mb-3">
-                  <option selected></option>
+                  <option
+                    v-for="estado in stCboEstado"
+                    :key="estado.nCodigoEstado"
+                    :value="estado.sNomeEstado"
+                  >
+                    {{ estado.sNomeEstado }}
+                  </option>
                 </select>
               </div>
             </div>
