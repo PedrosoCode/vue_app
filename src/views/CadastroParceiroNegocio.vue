@@ -16,9 +16,9 @@ interface stFormInfo {
   sComplemento: string
   sNumero: string
   sCep: string
-  nCodigoPais: number
-  nCodigoCidade: number
-  nCodigoEstado: number
+  nCodigoPais: number | null
+  nCodigoCidade: number | null
+  nCodigoEstado: number | null
 }
 
 const stFormInfo = reactive<stFormInfo>({
@@ -33,9 +33,9 @@ const stFormInfo = reactive<stFormInfo>({
   sComplemento: '',
   sNumero: '',
   sCep: '',
-  nCodigoPais: 0,
-  nCodigoCidade: 0,
-  nCodigoEstado: 0,
+  nCodigoPais: null,
+  nCodigoCidade: null,
+  nCodigoEstado: null,
 })
 
 interface stateCboPais {
@@ -92,9 +92,13 @@ async function loadComboPais() {
   }
 }
 
-async function loadComboCidade() {
+async function loadComboCidade(nCodigoEstado: number | null) {
   try {
-    const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/cidade')
+    const response = await axios.request({
+      method: 'POST',
+      url: import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/cidade',
+      data: { nCodigoEstado },
+    })
     stCboCidade.value = response.data
     console.log('Dados carregados:', stCboCidade.value)
   } catch (error) {
@@ -114,8 +118,14 @@ async function loadComboEstado() {
 
 async function loadCombos() {
   loadComboPais()
-  loadComboCidade()
+  loadComboCidade(null)
   loadComboEstado()
+}
+
+function ComboEstadoSelectedChange(event: Event) {
+  const target = event.target as HTMLSelectElement
+  const codigoEstado = target.value ? Number(target.value) : null
+  loadComboCidade(codigoEstado)
 }
 
 onMounted(() => {
@@ -212,7 +222,6 @@ onMounted(() => {
                     id=""
                     class="form-control"
                     placeholder="Insira o Telefone"
-                    required
                   />
                 </div>
               </div>
@@ -239,7 +248,6 @@ onMounted(() => {
                     id=""
                     class="form-control"
                     placeholder="Insira o logradouro"
-                    required
                   />
                 </div>
               </div>
@@ -264,7 +272,6 @@ onMounted(() => {
                     id=""
                     class="form-control"
                     placeholder="Insira o Complemento caso aplicável"
-                    required
                   />
                 </div>
               </div>
@@ -279,7 +286,6 @@ onMounted(() => {
                     id=""
                     class="form-control"
                     placeholder="Insira o N°"
-                    required
                   />
                 </div>
               </div>
@@ -293,7 +299,6 @@ onMounted(() => {
                     id=""
                     class="form-control"
                     placeholder="Insira o CEP"
-                    required
                   />
                 </div>
               </div>
@@ -321,11 +326,16 @@ onMounted(() => {
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Estado</label>
-                <select v-model="stFormInfo.nCodigoEstado" id="" class="form-select mb-3">
+                <select
+                  v-model="stFormInfo.nCodigoEstado"
+                  @change="ComboEstadoSelectedChange"
+                  class="form-select mb-3"
+                >
+                  <option :value="null">Selecione um estado</option>
                   <option
                     v-for="estado in stCboEstado"
                     :key="estado.nCodigoEstado"
-                    :value="estado.sNomeEstado"
+                    :value="estado.nCodigoEstado"
                   >
                     {{ estado.sNomeEstado }}
                   </option>
