@@ -307,7 +307,7 @@ onMounted(() => {
               <div class="col-md-3">
                 <label for="" class="form-label">País</label>
                 <select v-model="stFormInfo.nCodigoPais" id="" class="form-select mb-3">
-                  <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.sNomePais">
+                  <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.nCodigoPais">
                     {{ pais.sNomePais }}
                   </option>
                 </select>
@@ -318,7 +318,7 @@ onMounted(() => {
                   <option
                     v-for="cidade in stCboCidade"
                     :key="cidade.nCodigoCidade"
-                    :value="cidade.sDescricaoCidade"
+                    :value="cidade.nCodigoCidade"
                   >
                     {{ cidade.sDescricaoCidade }}
                   </option>
@@ -343,9 +343,15 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          <div class="row justify-content-end">
+            <div class="col-md-2 mb-3">
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+
       </form>
+      <br><br>
     </header>
   </main>
 </template>
