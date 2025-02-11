@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import AbouView from '../views/AboutView.vue'
 import MainMenu from '../views/MainMenuView.vue'
 import CadParceiroNegocio from '../views/CadastroParceiroNegocio.vue'
+import ListaParceiroNegocio from '../views/ListaParceiroNegocio.vue'
 
 import '../bs/bootstrap-5.3.3-dist/css/bootstrap.min.css'
 import '../bs/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'
@@ -38,6 +39,12 @@ const router = createRouter({
       path: '/cadparceiro',
       name: 'cadparceiro',
       component: CadParceiroNegocio,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/listaparceiro',
+      name: 'listaparceiro',
+      component: ListaParceiroNegocio,
       meta: { requiresAuth: true },
     },
   ],
