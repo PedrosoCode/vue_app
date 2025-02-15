@@ -59,6 +59,12 @@ interface stateComboEstado {
 }
 const stCboEstado = ref<stateComboEstado[]>([])
 
+interface stateComboTipoParceiro {
+  sSigla: number
+  sTipoParceiro: string
+}
+const stCboTipoParceiro = ref<stateComboTipoParceiro[]>([])
+
 function btnEnviarClick() {
   console.log(stFormInfo)
   axios
@@ -81,6 +87,17 @@ function btnEnviarClick() {
     .then((response) => console.log(response))
     .catch((error) => console.log(error))
 }
+
+async function LoadComboTipoParceiro() {
+  try {
+    const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/tipo_parceiro')
+    stCboTipoParceiro.value = response.data
+    console.log('Dados carregados:', stCboTipoParceiro.value)
+  } catch (error) {
+    console.error('Erro ao carregar tipo parceiro:', error)
+  }
+}
+
 
 async function loadComboPais() {
   try {
@@ -120,6 +137,7 @@ async function loadCombos() {
   loadComboPais()
   loadComboCidade(null)
   loadComboEstado()
+  LoadComboTipoParceiro()
 }
 
 function ComboEstadoSelectedChange(event: Event) {
@@ -195,8 +213,18 @@ onMounted(() => {
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Tipo Parceiro</label>
-                <select v-model="stFormInfo.sTipoParceiro" id="" class="form-select">
-                  <option selected></option>
+                <select
+                  v-model="stFormInfo.sTipoParceiro"
+                  class="form-select mb-3"
+                >
+                  <option :value="null">Selecione o Tipo de Parceiro</option>
+                  <option
+                    v-for="tpParceiro in stCboTipoParceiro"
+                    :key="tpParceiro.sSigla"
+                    :value="tpParceiro.sTipoParceiro"
+                  >
+                    {{ tpParceiro.sTipoParceiro }}
+                  </option>
                 </select>
               </div>
             </div>
