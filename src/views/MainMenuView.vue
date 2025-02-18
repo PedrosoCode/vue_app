@@ -8,6 +8,9 @@
         <button class="btn btn-primary" type="button" @click="$router.push('cadparceiro')">
           Cadastro de parceiro de negócio
         </button>
+        <button class="btn btn-primary" type="button" @click="$router.push('listaparceiro')">
+          Lista de parceiro de negócio
+        </button>
         <button class="btn btn-primary" type="button">Button</button>
       </div>
     </div>
