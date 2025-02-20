@@ -3,6 +3,7 @@ import MainNavbar from '@/components/MainNavbar.vue'
 import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 interface stFormInfo {
   sRazaoSocial: string
@@ -65,8 +66,11 @@ interface stateComboTipoParceiro {
 }
 const stCboTipoParceiro = ref<stateComboTipoParceiro[]>([])
 
+const route = useRoute();
+const urlCodigoParceiro = route.params.id
+
 function btnEnviarClick() {
-  console.log(stFormInfo)
+  console.log(urlCodigoParceiro)
   axios
     .post(import.meta.env.VITE_DEFAULT_API_LINK + '/', {
       sRazaoSocial: stFormInfo.sRazaoSocial,

@@ -47,6 +47,12 @@ const router = createRouter({
       component: ListaParceiroNegocio,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/parceiro/:id',
+      name: 'detalhes_parceiro',
+      component: CadParceiroNegocio,
+      props: true //
+    }
   ],
 })
 

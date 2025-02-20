@@ -2,6 +2,7 @@
 import MainNavbar from '@/components/MainNavbar.vue'
 import { reactive, ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 interface Filtro {
   sNomeParceiro: string
@@ -11,6 +12,7 @@ interface Parceiro {
   sNomeFantasiaParceiro: string
   sRazaoSocialParceiro: string
   sDescricaoCidade: string
+  nCodigoParceiro: number
 }
 
 const filtro = reactive<Filtro>({
@@ -19,6 +21,14 @@ const filtro = reactive<Filtro>({
 
 const dadosParceiros = ref<Parceiro[]>([])
 const jwtToken = localStorage.getItem('jwtToken')
+const router = useRouter()
+
+function verDetalhes(codigoParceiro: number) {
+  router.push({
+    name: 'detalhes_parceiro',
+    params: { id: codigoParceiro }
+  })
+}
 
 async function getListaParceiros() {
   try {
@@ -87,12 +97,16 @@ onMounted(() => {
             v-for="(parceiro, index) in dadosParceiros"
             :key="index"
           >
-            <th scope="row">{{ index + 1 }}</th>
+            <th scope="row">{{ parceiro.nCodigoParceiro }}</th>
             <td>{{ parceiro.sNomeFantasiaParceiro}}</td>
             <td>{{ parceiro.sRazaoSocialParceiro}}</td>
             <td>{{ parceiro.sDescricaoCidade}}</td>
             <td>
-              <button type="button" class="btn btn-primary">
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click="verDetalhes(parceiro.nCodigoParceiro)"
+              >
                 Detalhes
               </button>
             </td>
