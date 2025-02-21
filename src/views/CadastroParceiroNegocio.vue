@@ -39,6 +39,8 @@ const stFormInfo = reactive<stFormInfo>({
   nCodigoEstado: null,
 })
 
+const DadosParceiro = ref<stFormInfo[]>([])
+
 interface stateCboPais {
   nCodigoPais: number
   sNomePais: string
@@ -67,12 +69,17 @@ interface stateComboTipoParceiro {
 const stCboTipoParceiro = ref<stateComboTipoParceiro[]>([])
 
 const route = useRoute();
-const urlCodigoParceiro = route.params.id
+const jwtToken = localStorage.getItem('jwtToken')
+
+const urlCodigoParceiro: number | null = route.params.id === undefined || isNaN(Number(route.params.id))
+    ? null
+    : Number(route.params.id);
 
 function btnEnviarClick() {
-  console.log(urlCodigoParceiro)
+  //console.log(urlCodigoParceiro)
   axios
     .post(import.meta.env.VITE_DEFAULT_API_LINK + '/', {
+      nCodigoParceiro : urlCodigoParceiro,
       sRazaoSocial: stFormInfo.sRazaoSocial,
       sNomeFantasia: stFormInfo.sNomeFantasia,
       sTipoParceiro: stFormInfo.sTipoParceiro,
@@ -88,7 +95,6 @@ function btnEnviarClick() {
       nCodigoCidade: stFormInfo.nCodigoCidade,
       nCodigoEstado: stFormInfo.nCodigoEstado,
     })
-    .then((response) => console.log(response))
     .catch((error) => console.log(error))
 }
 
@@ -96,7 +102,7 @@ async function LoadComboTipoParceiro() {
   try {
     const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/tipo_parceiro')
     stCboTipoParceiro.value = response.data
-    console.log('Dados carregados:', stCboTipoParceiro.value)
+    //console.log('Dados carregados:', stCboTipoParceiro.value)
   } catch (error) {
     console.error('Erro ao carregar tipo parceiro:', error)
   }
@@ -107,7 +113,7 @@ async function loadComboPais() {
   try {
     const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/pais')
     stCboPais.value = response.data
-    console.log('Dados carregados:', stCboPais.value)
+    //console.log('Dados carregados:', stCboPais.value)
   } catch (error) {
     console.error('Erro ao carregar empresas:', error)
   }
@@ -121,7 +127,7 @@ async function loadComboCidade(nCodigoEstado: number | null) {
       data: { nCodigoEstado },
     })
     stCboCidade.value = response.data
-    console.log('Dados carregados:', stCboCidade.value)
+    //console.log('Dados carregados:', stCboCidade.value)
   } catch (error) {
     console.error('Erro ao carregar Cidades:', error)
   }
@@ -131,9 +137,29 @@ async function loadComboEstado() {
   try {
     const response = await axios.get(import.meta.env.VITE_DEFAULT_API_LINK + '/genericos/estado')
     stCboEstado.value = response.data
-    console.log('Dados carregados:', stCboEstado.value)
+    //console.log('Dados carregados:', stCboEstado.value)
   } catch (error) {
     console.error('Erro ao carregar estados/uf:', error)
+  }
+}
+
+async function LoadDadosParceiro(nCodigoParceiro : number | null) {
+
+  if (nCodigoParceiro != null) {
+
+      try {
+
+        const response = await axios.post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/lista_unico',
+          {nCodigoParceiro : nCodigoParceiro},
+          {headers: {Authorization: `Bearer ${jwtToken}`} }
+        )
+
+        DadosParceiro.value  = response.data
+
+      } catch (error) {
+        console.log("erro ao carregar dados do parceiro", error)
+      }
+
   }
 }
 
@@ -142,6 +168,7 @@ async function loadCombos() {
   loadComboCidade(null)
   loadComboEstado()
   LoadComboTipoParceiro()
+  LoadDadosParceiro(urlCodigoParceiro)
 }
 
 function ComboEstadoSelectedChange(event: Event) {
