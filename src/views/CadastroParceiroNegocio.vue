@@ -6,37 +6,39 @@ import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 interface stFormInfo {
-  sRazaoSocial: string
-  sNomeFantasia: string
-  sTipoParceiro: string
-  sEmail: string
-  sTelefone: string
-  sContato: string
+  sRazaoSocialParceiro: string
+  sNomeFantasiaParceiro: string
+  nCodigoTipoParceiro: number
+  sTipoParceiroNegocio: string
+  sEmailParceiro: string
+  sTelefoneParceiro: string
+  sContatoParceiro: string
   sLogradouro: string
-  sBairro: string
-  sComplemento: string
-  sNumero: string
-  sCep: string
-  nCodigoPais: number | null
-  nCodigoCidade: number | null
-  nCodigoEstado: number | null
+  sBairroParceiro: string
+  sComplementoParceiro: string
+  sNumeroParceiro: string
+  sCepParceiro: string
+  nCodigoPaisParceiro: number | null
+  nCodigoCidadeParceiro: number | null
+  nCodigoEstadoParceiro: number | null
 }
 
 const stFormInfo = reactive<stFormInfo>({
-  sRazaoSocial: '',
-  sNomeFantasia: '',
-  sTipoParceiro: '',
-  sEmail: '',
-  sTelefone: '',
-  sContato: '',
+  sRazaoSocialParceiro: '',
+  sNomeFantasiaParceiro: '',
+  nCodigoTipoParceiro: 0,
+  sTipoParceiroNegocio: '',
+  sEmailParceiro: '',
+  sTelefoneParceiro: '',
+  sContatoParceiro: '',
   sLogradouro: '',
-  sBairro: '',
-  sComplemento: '',
-  sNumero: '',
-  sCep: '',
-  nCodigoPais: null,
-  nCodigoCidade: null,
-  nCodigoEstado: null,
+  sBairroParceiro: '',
+  sComplementoParceiro: '',
+  sNumeroParceiro: '',
+  sCepParceiro: '',
+  nCodigoPaisParceiro: null,
+  nCodigoCidadeParceiro: null,
+  nCodigoEstadoParceiro: null,
 })
 
 const DadosParceiro = ref<stFormInfo[]>([])
@@ -65,6 +67,7 @@ const stCboEstado = ref<stateComboEstado[]>([])
 interface stateComboTipoParceiro {
   sSigla: number
   sTipoParceiro: string
+  nCodigoTipoParceiro: number
 }
 const stCboTipoParceiro = ref<stateComboTipoParceiro[]>([])
 
@@ -80,20 +83,21 @@ function btnEnviarClick() {
   axios
     .post(import.meta.env.VITE_DEFAULT_API_LINK + '/', {
       nCodigoParceiro : urlCodigoParceiro,
-      sRazaoSocial: stFormInfo.sRazaoSocial,
-      sNomeFantasia: stFormInfo.sNomeFantasia,
-      sTipoParceiro: stFormInfo.sTipoParceiro,
-      sEmail: stFormInfo.sEmail,
-      sTelefone: stFormInfo.sTelefone,
-      sContato: stFormInfo.sContato,
+      sRazaoSocial: stFormInfo.sRazaoSocialParceiro,
+      sNomeFantasia: stFormInfo.sNomeFantasiaParceiro,
+      sTipoParceiro: stFormInfo.sTipoParceiroNegocio,
+      nTipoParceiro: stFormInfo.nCodigoTipoParceiro,
+      sEmail: stFormInfo.sEmailParceiro,
+      sTelefone: stFormInfo.sTelefoneParceiro,
+      sContato: stFormInfo.sContatoParceiro,
       sLogradouro: stFormInfo.sLogradouro,
-      sBairro: stFormInfo.sBairro,
-      sComplemento: stFormInfo.sComplemento,
-      sNumero: stFormInfo.sNumero,
-      sCep: stFormInfo.sCep,
-      nCodigoPais: stFormInfo.nCodigoPais,
-      nCodigoCidade: stFormInfo.nCodigoCidade,
-      nCodigoEstado: stFormInfo.nCodigoEstado,
+      sBairro: stFormInfo.sBairroParceiro,
+      sComplemento: stFormInfo.sComplementoParceiro,
+      sNumero: stFormInfo.sNumeroParceiro,
+      sCep: stFormInfo.sCepParceiro,
+      nCodigoPais: stFormInfo.nCodigoPaisParceiro,
+      nCodigoCidade: stFormInfo.nCodigoCidadeParceiro,
+      nCodigoEstado: stFormInfo.nCodigoEstadoParceiro,
     })
     .catch((error) => console.log(error))
 }
@@ -155,6 +159,7 @@ async function LoadDadosParceiro(nCodigoParceiro : number | null) {
         )
 
         DadosParceiro.value  = response.data
+        Object.assign(stFormInfo, response.data[0])
 
       } catch (error) {
         console.log("erro ao carregar dados do parceiro", error)
@@ -164,11 +169,17 @@ async function LoadDadosParceiro(nCodigoParceiro : number | null) {
 }
 
 async function loadCombos() {
-  loadComboPais()
-  loadComboCidade(null)
-  loadComboEstado()
-  LoadComboTipoParceiro()
-  LoadDadosParceiro(urlCodigoParceiro)
+  await Promise.all([
+    loadComboPais(),
+    loadComboEstado(),
+    LoadComboTipoParceiro(),
+  ]);
+
+  await LoadDadosParceiro(urlCodigoParceiro);
+
+  if (stFormInfo.nCodigoEstadoParceiro) {
+    await loadComboCidade(stFormInfo.nCodigoEstadoParceiro);
+  }
 }
 
 function ComboEstadoSelectedChange(event: Event) {
@@ -220,7 +231,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">Razão Social</label>
                   <input
-                    v-model="stFormInfo.sRazaoSocial"
+                    v-model="stFormInfo.sRazaoSocialParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -233,7 +244,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Nome Fantasia</label>
                   <input
-                    v-model="stFormInfo.sNomeFantasia"
+                    v-model="stFormInfo.sNomeFantasiaParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -244,17 +255,10 @@ onMounted(() => {
               </div>
               <div class="col-md-2">
                 <label for="" class="form-label">Tipo Parceiro</label>
-                <select
-                  v-model="stFormInfo.sTipoParceiro"
-                  class="form-select mb-3"
-                >
+                <select v-model="stFormInfo.sTipoParceiroNegocio" id="" class="form-select mb-3">
                   <option :value="null">Selecione o Tipo de Parceiro</option>
-                  <option
-                    v-for="tpParceiro in stCboTipoParceiro"
-                    :key="tpParceiro.sSigla"
-                    :value="tpParceiro.sTipoParceiro"
-                  >
-                    {{ tpParceiro.sTipoParceiro }}
+                  <option v-for="tipoParceiro in stCboTipoParceiro" :key="tipoParceiro.nCodigoTipoParceiro" :value="tipoParceiro.sTipoParceiro">
+                    {{ tipoParceiro.sTipoParceiro }}
                   </option>
                 </select>
               </div>
@@ -264,7 +268,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">E-Mail</label>
                   <input
-                    v-model="stFormInfo.sEmail"
+                    v-model="stFormInfo.sEmailParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -276,7 +280,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">Telefone</label>
                   <input
-                    v-model="stFormInfo.sTelefone"
+                    v-model="stFormInfo.sTelefoneParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -288,7 +292,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">Contato</label>
                   <input
-                    v-model="stFormInfo.sContato"
+                    v-model="stFormInfo.sContatoParceiro"
                     type=""
                     id=""
                     class="form-control"
@@ -314,7 +318,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Bairro</label>
                   <input
-                    v-model="stFormInfo.sBairro"
+                    v-model="stFormInfo.sBairroParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -326,7 +330,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="disabledTextInput" class="form-label">Complemento</label>
                   <input
-                    v-model="stFormInfo.sComplemento"
+                    v-model="stFormInfo.sComplementoParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -340,7 +344,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">Número</label>
                   <input
-                    v-model="stFormInfo.sNumero"
+                    v-model="stFormInfo.sNumeroParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -353,7 +357,7 @@ onMounted(() => {
                 <div class="mb-3">
                   <label for="" class="form-label">CEP</label>
                   <input
-                    v-model="stFormInfo.sCep"
+                    v-model="stFormInfo.sCepParceiro"
                     type="text"
                     id=""
                     class="form-control"
@@ -365,7 +369,7 @@ onMounted(() => {
             <div class="row justify-content-start">
               <div class="col-md-3">
                 <label for="" class="form-label">País</label>
-                <select v-model="stFormInfo.nCodigoPais" id="" class="form-select mb-3">
+                <select v-model="stFormInfo.nCodigoPaisParceiro" id="" class="form-select mb-3">
                   <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.nCodigoPais">
                     {{ pais.sNomePais }}
                   </option>
@@ -373,7 +377,7 @@ onMounted(() => {
               </div>
               <div class="col-md-5">
                 <label for="" class="form-label">Cidade</label>
-                <select v-model="stFormInfo.nCodigoCidade" id="" class="form-select mb-3">
+                <select v-model="stFormInfo.nCodigoCidadeParceiro" id="" class="form-select mb-3">
                   <option
                     v-for="cidade in stCboCidade"
                     :key="cidade.nCodigoCidade"
@@ -386,7 +390,7 @@ onMounted(() => {
               <div class="col-md-2">
                 <label for="" class="form-label">Estado</label>
                 <select
-                  v-model="stFormInfo.nCodigoEstado"
+                  v-model="stFormInfo.nCodigoEstadoParceiro"
                   @change="ComboEstadoSelectedChange"
                   class="form-select mb-3"
                 >
