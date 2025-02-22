@@ -11,6 +11,7 @@ interface stFormInfo {
   nCodigoTipoParceiro: number
   sTipoParceiroNegocio: string
   sEmailParceiro: string
+  sDocumentoParceiro : string
   sTelefoneParceiro: string
   sContatoParceiro: string
   sLogradouro: string
@@ -29,6 +30,7 @@ const stFormInfo = reactive<stFormInfo>({
   nCodigoTipoParceiro: 0,
   sTipoParceiroNegocio: '',
   sEmailParceiro: '',
+  sDocumentoParceiro: '',
   sTelefoneParceiro: '',
   sContatoParceiro: '',
   sLogradouro: '',
@@ -81,13 +83,14 @@ const urlCodigoParceiro: number | null = route.params.id === undefined || isNaN(
 function btnEnviarClick() {
   //console.log(urlCodigoParceiro)
   axios
-    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/', {
+    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/upsert_parceiro', {
       nCodigoParceiro : urlCodigoParceiro,
       sRazaoSocial: stFormInfo.sRazaoSocialParceiro,
       sNomeFantasia: stFormInfo.sNomeFantasiaParceiro,
       sTipoParceiro: stFormInfo.sTipoParceiroNegocio,
       nTipoParceiro: stFormInfo.nCodigoTipoParceiro,
       sEmail: stFormInfo.sEmailParceiro,
+      sDocumento : stFormInfo.sDocumentoParceiro,
       sTelefone: stFormInfo.sTelefoneParceiro,
       sContato: stFormInfo.sContatoParceiro,
       sLogradouro: stFormInfo.sLogradouro,
