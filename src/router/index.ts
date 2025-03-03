@@ -5,6 +5,7 @@ import AbouView from '../views/AboutView.vue'
 import MainMenu from '../views/MainMenuView.vue'
 import CadParceiroNegocio from '../views/CadastroParceiroNegocio.vue'
 import ListaParceiroNegocio from '../views/ListaParceiroNegocio.vue'
+import TesteView from '../views/TestesView.vue'
 
 import '../bs/bootstrap-5.3.3-dist/css/bootstrap.min.css'
 import '../bs/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'
@@ -51,6 +52,12 @@ const router = createRouter({
       path: '/parceiro/:id',
       name: 'detalhes_parceiro',
       component: CadParceiroNegocio,
+      props: true //
+    },
+    {
+      path: '/testeview',
+      name: 'testeview',
+      component: TesteView,
       props: true //
     }
   ],
