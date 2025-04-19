@@ -139,10 +139,10 @@ onMounted(() => {
             <br />
             <form @submit.prevent="btnLogarClick">
               <div class="mb-3">
-                <label for="loginUserName" class="form-label">Usuário</label>
+                <label for="loginUserName" class="form-label">E-Mail</label>
                 <input
                   v-model="loginForm.sNomeUsuario"
-                  placeholder="Nome do seu Usuário"
+                  placeholder="Seu E-Mail"
                   type="text"
                   class="form-control"
                   id="loginUserName"
@@ -197,7 +197,7 @@ onMounted(() => {
                 <label for="registerEmail" class="form-label">Endereço de E-mail</label>
                 <input
                   v-model="registerForm.sEmail"
-                  placeholder="E-mail"
+                  placeholder="Seu melhor E-mail"
                   type="email"
                   class="form-control"
                   id="registerEmail"
