@@ -1,103 +1,114 @@
 <script setup lang="ts">
 import MainNavbar from "@/components/MainNavbar.vue";
 </script>
-
 <template>
-  <main>
-    <header>
-      <MainNavbar />
-    </header>
-    <div class="container border border-secondary-subtle rounded-2">
-      <div class="row justify-content-center text-center m-3">
-        <div class="col-4">Dados do parceiro</div>
-      </div>
-      <form>
-        <div class="row g-3">
-          <div class="col-md-12">
-            <label for="" class="form-label">Parceiro de negócio</label>
-            <select id="" class="form-select mb-3">
-              <option :value="null">Selecione o Parceiro</option>
-            </select>
+  <main class="min-h-screen bg-slate-100 py-6">
+    <div class="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-screen-xl space-y-6">
+
+      <!-- Dados do Parceiro -->
+      <section class="bg-white border border-slate-200 rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-medium text-gray-700 text-center mb-4">Dados do Parceiro</h2>
+        <form @submit.prevent>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-1">
+              <label class="block text-sm font-medium text-gray-700">Parceiro de Negócio</label>
+              <select
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-300">
+                <option :value="null">Selecione o Parceiro</option>
+                <!-- opções... -->
+              </select>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Dados do Ativo -->
+      <section class="bg-white border border-slate-200 rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-medium text-gray-700 text-center mb-4">Dados do Ativo</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label for="dataEntrada" class="block text-sm font-medium text-gray-700">Data Entrada</label>
+            <input
+              id="dataEntrada"
+              type="date"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-300" />
+          </div>
+          <div>
+            <label for="dataSaida" class="block text-sm font-medium text-gray-700">Data Saída</label>
+            <input
+              id="dataSaida"
+              type="date"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-300" />
           </div>
         </div>
-      </form>
-    </div>
-    <br />
-    <div class="container border border-secondary-subtle rounded-2 p-3">
-      <div class="row justify-content-center text-center m-3">
-        <div class="col-4">Dados do ativo</div>
-      </div>
-      <div class="row g-3">
-        <div class="col-sm-6 col-md-3">
-          <label for="dataEntrada" class="form-label">Data Entrada</label>
-          <input type="date" id="dataEntrada" class="form-control" />
+        <div class="mt-4">
+          <label for="observacoes" class="block text-sm font-medium text-gray-700">Informações/Observações</label>
+          <textarea
+            id="observacoes"
+            rows="3"
+            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-300">
+          </textarea>
         </div>
-        <div class="col-sm-6 col-md-3">
-          <label for="dataSaida" class="form-label">Data Saída</label>
-          <input type="date" id="dataSaida" class="form-control" />
+      </section>
+
+      <!-- Serviços Realizados -->
+      <section class="bg-white border border-slate-200 rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-medium text-gray-700 text-center mb-4">Serviços Realizados</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">N°</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cod. Serviço</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Quantidade</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor Unitário</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-      <div class="mb-3">
-        <label for="" class="form-label">Informações/Observações</label>
-        <textarea class="form-control" id="" rows="3"></textarea>
-      </div>
+      </section>
+
+      <!-- Produtos Utilizados -->
+      <section class="bg-white border border-slate-200 rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-medium text-gray-700 text-center mb-4">Produtos Utilizados</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">N°</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cod. Item</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Quantidade</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Valor Unitário</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+                <td class="px-4 py-3 text-sm text-gray-700"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </div>
-    <br />
-    <div class="container border border-secondary-subtle rounded-2 p-3">
-      <div class="row justify-content-center text-center m-3">
-        <div class="col-4">Serviços realizados</div>
-      </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Cod. Serviço</th>
-            <th scope="col">Descrição</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Valor Unitário</th>
-            <th scope="col">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <br />
-    <div class="container border border-secondary-subtle rounded-2 p-3">
-      <div class="row justify-content-center text-center m-3">
-        <div class="col-4">Produtos Utilizados</div>
-      </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Cod. item</th>
-            <th scope="col">Descrição</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Valor Unitário</th>
-            <th scope="col">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-            <td>aaa</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <br />
   </main>
 </template>

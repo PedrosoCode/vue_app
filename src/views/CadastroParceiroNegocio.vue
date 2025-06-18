@@ -195,229 +195,196 @@ onMounted(() => {
   loadCombos()
 })
 </script>
-
 <template>
-  <main>
-    <header>
-      <MainNavbar />
-
-      <div>
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-          <RouterLink to="/login">Login</RouterLink>
-          <RouterLink to="/menu">módulos</RouterLink>
-        </nav>
-      </div>
-      <br />
-      <form @submit.prevent="btnEnviarClick">
-        <div class="container border border-subtle rounded">
+  <main class="min-h-screen bg-slate-100 py-4">
+    <!-- Container com largura máxima maior em desktop -->
+    <div class="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-screen-xl bg-white rounded-lg shadow-lg p-6">
+      <h1 class="text-center text-2xl font-semibold mb-6 text-gray-800">Cadastro de Parceiros de Negócio</h1>
+      <form @submit.prevent="btnEnviarClick" class="space-y-6">
+        <!-- Datas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <br />
-            <div class="text-center">
-              <label class="form-label">Formulário de Cadastro de parceiros de negócio</label>
-            </div>
-            <div class="text-start">
-              <div>
-                <label class="form-label">Data do Cadastro:</label>
-              </div>
-              <div>
-                <label class="form-label">Data Última Alteração:</label>
-              </div>
-              <br />
-            </div>
+            <label class="block text-sm font-medium text-gray-700">Data do Cadastro</label>
+            <input type="date" disabled class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50" />
           </div>
-          <div class="row justify-content-center">
-            <br />
-            <div class="row justify-content-center">
-              <div class="col-5">
-                <div class="mb-3">
-                  <label for="" class="form-label">Razão Social</label>
-                  <input
-                    v-model="stFormInfo.sRazaoSocialParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira a razão social"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-5">
-                <div class="mb-3">
-                  <label for="disabledTextInput" class="form-label">Nome Fantasia</label>
-                  <input
-                    v-model="stFormInfo.sNomeFantasiaParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o Nome Fantasia"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-2">
-                <label for="" class="form-label">Tipo Parceiro</label>
-                <select v-model="stFormInfo.sTipoParceiroNegocio" id="" class="form-select mb-3">
-                  <option :value="null">Selecione o Tipo de Parceiro</option>
-                  <option v-for="tipoParceiro in stCboTipoParceiro" :key="tipoParceiro.nCodigoTipoParceiro" :value="tipoParceiro.sTipoParceiro">
-                    {{ tipoParceiro.sTipoParceiro }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-4">
-                <div class="mb-3">
-                  <label for="" class="form-label">E-Mail</label>
-                  <input
-                    v-model="stFormInfo.sEmailParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o E-mail"
-                  />
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="mb-3">
-                  <label for="" class="form-label">Telefone</label>
-                  <input
-                    v-model="stFormInfo.sTelefoneParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o Telefone"
-                  />
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="mb-3">
-                  <label for="" class="form-label">Contato</label>
-                  <input
-                    v-model="stFormInfo.sContatoParceiro"
-                    type=""
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o Contato"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-6">
-                <div class="mb-3">
-                  <label for="" class="form-label">Logradouro</label>
-                  <input
-                    v-model="stFormInfo.sLogradouro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o logradouro"
-                  />
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="mb-3">
-                  <label for="disabledTextInput" class="form-label">Bairro</label>
-                  <input
-                    v-model="stFormInfo.sBairroParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o Bairro"
-                  />
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="mb-3">
-                  <label for="disabledTextInput" class="form-label">Complemento</label>
-                  <input
-                    v-model="stFormInfo.sComplementoParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o Complemento caso aplicável"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-start">
-              <div class="col-2">
-                <div class="mb-3">
-                  <label for="" class="form-label">Número</label>
-                  <input
-                    v-model="stFormInfo.sNumeroParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o N°"
-                  />
-                </div>
-              </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Data Última Alteração</label>
+            <input type="date" disabled class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50" />
+          </div>
+        </div>
 
-              <div class="col-3">
-                <div class="mb-3">
-                  <label for="" class="form-label">CEP</label>
-                  <input
-                    v-model="stFormInfo.sCepParceiro"
-                    type="text"
-                    id=""
-                    class="form-control"
-                    placeholder="Insira o CEP"
-                  />
-                </div>
-              </div>
+        <!-- Razão Social e Nome Fantasia -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Razão Social</label>
+            <input
+              v-model="stFormInfo.sRazaoSocialParceiro"
+              type="text"
+              required
+              placeholder="Insira a razão social"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Nome Fantasia</label>
+            <input
+              v-model="stFormInfo.sNomeFantasiaParceiro"
+              type="text"
+              required
+              placeholder="Insira o Nome Fantasia"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+        </div>
+
+        <!-- Tipo Parceiro -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Tipo Parceiro</label>
+          <select
+            v-model="stFormInfo.sTipoParceiroNegocio"
+            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+          >
+            <option :value="null">Selecione o Tipo de Parceiro</option>
+            <option
+              v-for="tipo in stCboTipoParceiro"
+              :key="tipo.nCodigoTipoParceiro"
+              :value="tipo.sTipoParceiro"
+            >
+              {{ tipo.sTipoParceiro }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Contato -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">E-Mail</label>
+            <input
+              v-model="stFormInfo.sEmailParceiro"
+              type="email"
+              placeholder="Insira o E-mail"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Telefone</label>
+            <input
+              v-model="stFormInfo.sTelefoneParceiro"
+              type="tel"
+              placeholder="Insira o Telefone"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Contato</label>
+            <input
+              v-model="stFormInfo.sContatoParceiro"
+              type="text"
+              placeholder="Insira o Contato"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Logradouro</label>
+            <input
+              v-model="stFormInfo.sLogradouro"
+              type="text"
+              placeholder="Insira o logradouro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Bairro</label>
+              <input
+                v-model="stFormInfo.sBairroParceiro"
+                type="text"
+                placeholder="Insira o Bairro"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+              />
             </div>
-            <div class="row justify-content-start">
-              <div class="col-md-3">
-                <label for="" class="form-label">País</label>
-                <select v-model="stFormInfo.nCodigoPaisParceiro" id="" class="form-select mb-3">
-                  <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.nCodigoPais">
-                    {{ pais.sNomePais }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-5">
-                <label for="" class="form-label">Cidade</label>
-                <select v-model="stFormInfo.nCodigoCidadeParceiro" id="" class="form-select mb-3">
-                  <option
-                    v-for="cidade in stCboCidade"
-                    :key="cidade.nCodigoCidade"
-                    :value="cidade.nCodigoCidade"
-                  >
-                    {{ cidade.sDescricaoCidade }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <label for="" class="form-label">Estado</label>
-                <select
-                  v-model="stFormInfo.nCodigoEstadoParceiro"
-                  @change="ComboEstadoSelectedChange"
-                  class="form-select mb-3"
-                >
-                  <option :value="null">Selecione um estado</option>
-                  <option
-                    v-for="estado in stCboEstado"
-                    :key="estado.nCodigoEstado"
-                    :value="estado.nCodigoEstado"
-                  >
-                    {{ estado.sNomeEstado }}
-                  </option>
-                </select>
-              </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Complemento</label>
+              <input
+                v-model="stFormInfo.sComplementoParceiro"
+                type="text"
+                placeholder="Complemento (opcional)"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+              />
             </div>
           </div>
-          <div class="row justify-content-end">
-            <div class="col-md-2 mb-3">
-              <button type="submit" class="btn btn-primary">Enviar</button>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Número</label>
+              <input
+                v-model="stFormInfo.sNumeroParceiro"
+                type="text"
+                placeholder="Insira o N°"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">CEP</label>
+              <input
+                v-model="stFormInfo.sCepParceiro"
+                type="text"
+                placeholder="Insira o CEP"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+              />
             </div>
           </div>
         </div>
 
+        <!-- País, Estado, Cidade -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">País</label>
+            <select
+              v-model="stFormInfo.nCodigoPaisParceiro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            >
+              <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.nCodigoPais">
+                {{ pais.sNomePais }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Estado</label>
+            <select
+              v-model="stFormInfo.nCodigoEstadoParceiro"
+              @change="ComboEstadoSelectedChange"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            >
+              <option :value="null">Selecione um estado</option>
+              <option v-for="estado in stCboEstado" :key="estado.nCodigoEstado" :value="estado.nCodigoEstado">{{ estado.sNomeEstado }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Cidade</label>
+            <select
+              v-model="stFormInfo.nCodigoCidadeParceiro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
+            >
+              <option
+                v-for="cidade in stCboCidade"
+                :key="cidade.nCodigoCidade"
+                :value="cidade.nCodigoCidade"
+              >
+                {{ cidade.sDescricaoCidade }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botão Enviar -->
+        <div class="text-right">
+          <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Enviar</button>
+        </div>
       </form>
-      <br><br>
-    </header>
+    </div>
   </main>
 </template>

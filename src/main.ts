@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import App from './App.vue'
 import router from './router'
+import './main.css'
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('jwtToken')

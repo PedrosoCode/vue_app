@@ -8,8 +8,6 @@ import ListaParceiroNegocio from '../views/ListaParceiroNegocio.vue'
 import TesteView from '../views/TestesView.vue'
 import OrdemServicoView from '../views/OrdemServicoView.vue'
 
-import '../bs/bootstrap-5.3.3-dist/css/bootstrap.min.css'
-import '../bs/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

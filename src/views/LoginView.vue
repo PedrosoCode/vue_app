@@ -4,6 +4,8 @@ import MainNavbar from '@/components/MainNavbar.vue'
 import axios from 'axios'
 import { onMounted } from 'vue'
 
+const tabAtual = ref<'login' | 'cadastro'>('login')
+
 const initCadastro: CadastroState = {
   sNomeUsuario: '',
   sEmail: '',
@@ -85,132 +87,85 @@ async function loadComboEmpresa() {
   }
 }
 
+function PrepararForm() {
+  try {
+
+    tabAtual.value = 'login'
+
+  } catch (error) {
+    console.error('Erro ao preparar formulário:', error)
+  }
+}
+
+function trocarTab() {
+  tabAtual.value = tabAtual.value === 'login' ? 'cadastro' : 'login'
+}
+
+
 onMounted(() => {
   loadComboEmpresa()
+  PrepararForm()
 })
-</script>
-
-<template>
+</script><template>
   <main>
-    <MainNavbar />
-    <br />
+    <div class="min-h-screen bg-slate-100 py-2 sm:py-4 md:py-6 lg:py-8">
+      <div class="flex justify-center pt-5">
+        <h1 class="font-sans text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-800">
+          Bem vindo ao CMMS
+        </h1>
+      </div>
 
-    <div class="container">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link active"
-            id="home-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#home"
-            type="button"
-            role="tab"
-            aria-controls="home"
-            aria-selected="true"
-          >
+      <!-- Wrapper unificado com largura responsiva -->
+      <div class="mx-4 sm:mx-auto max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mt-8 mb-6">
+        <!-- Toggle Login/Cadastro sem espaçamento -->
+        <div class="flex bg-slate-200 border border-gray-300 rounded-t-lg shadow-lg">
+          <button @click="trocarTab()"
+            class="flex-1 text-center py-2 font-medium text-gray-700 hover:bg-indigo-100 first:rounded-tl-lg last:rounded-tr-lg"
+            :class="{
+              'bg-indigo-300 outline-indigo-600 outline-2': tabAtual === 'login',
+              'border-b': tabAtual !== 'login'
+            }">
             Login
           </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="profile-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#profile"
-            type="button"
-            role="tab"
-            aria-controls="profile"
-            aria-selected="false"
-          >
-            Cadastrar
+          <button @click="trocarTab()"
+            class="flex-1 text-center py-2 font-medium text-gray-700 hover:bg-indigo-100 first:rounded-tl-lg last:rounded-tr-lg"
+            :class="{
+              'bg-indigo-300 outline-indigo-600 outline-2': tabAtual === 'cadastro',
+              'border-b': tabAtual !== 'cadastro'
+            }">
+            Cadastro
           </button>
-        </li>
-      </ul>
-
-      <div class="tab-content" id="myTabContent">
-        <!-- Formulário de Login -->
-        <div
-          class="tab-pane fade show active"
-          id="home"
-          role="tabpanel"
-          aria-labelledby="login-tab"
-        >
-          <div class="container border border-secondary-subtle rounded">
-            <br />
-            <form @submit.prevent="btnLogarClick">
-              <div class="mb-3">
-                <label for="loginUserName" class="form-label">E-Mail</label>
-                <input
-                  v-model="loginForm.sNomeUsuario"
-                  placeholder="Seu E-Mail"
-                  type="text"
-                  class="form-control"
-                  id="loginUserName"
-                />
-                <div id="emailHelp" class="form-text">Suas informações estão seguras conosco.</div>
-              </div>
-              <select
-                v-model="loginForm.nCodigoEmpresa"
-                class="form-select"
-                id="loginEmpresa"
-                required
-              >
-                <option value="0">Selecione uma empresa</option>
-                <option
-                  v-for="empresa in cboEmpresaValues"
-                  :key="empresa.codigo"
-                  :value="empresa.codigo"
-                >
-                  {{ empresa.nome_fantasia }}
-                </option>
-              </select>
-              <div class="mb-3">
-                <label for="loginPassword" class="form-label">Senha</label>
-                <input
-                  v-model="loginForm.sSenha"
-                  type="password"
-                  class="form-control"
-                  id="loginPassword"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary">Entrar</button>
-            </form>
-            <br />
-          </div>
-          <br />
         </div>
+        <!-- fim cabeçalho -->
+        <!-- Card de Formulário cadastro-->
+        <div v-if="tabAtual == 'cadastro'"
+          class="bg-slate-200 border border-t-0 border-gray-300 shadow-lg p-4 sm:p-6 md:p-8 space-y-6">
+          <!-- Usuário -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Usuário
+            </label>
+            <input type="text" v-model="registerForm.sNomeUsuario"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50" />
+          </div>
 
-        <!-- Formulário de Cadastro -->
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="cadastro-tab">
-          <div class="container border border-secondary-subtle rounded">
-            <br />
-            <form @submit.prevent="btnCadastroClick">
-              <div class="mb-3">
-                <label for="registerUserName" class="form-label">Nome de usuário</label>
-                <input
-                  v-model="registerForm.sNomeUsuario"
-                  placeholder="Seu usuário"
-                  type="text"
-                  class="form-control"
-                  id="registerNomeUsuario"
-                />
-                <label for="registerEmail" class="form-label">Endereço de E-mail</label>
-                <input
-                  v-model="registerForm.sEmail"
-                  placeholder="Seu melhor E-mail"
-                  type="email"
-                  class="form-control"
-                  id="registerEmail"
-                />
-                <div id="emailHelp" class="form-text">Suas informações estão seguras conosco.</div>
-              </div>
-              <select
-                v-model="registerForm.nCodigoEmpresa"
-                class="form-select"
-                id="registerEmpresa"
-                required
-              >
-                <option value="0">Selecione uma empresa</option>
+          <!-- Email -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Email
+            </label>
+            <input type="email" v-model="registerForm.sEmail"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50" />
+          </div>
+
+          <!-- Empresa -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Empresa
+            </label>
+            <select v-model="registerForm.nCodigoEmpresa"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50">
+              <option value="0">Selecione uma empresa</option>
                 <option
                   v-for="empresa in cboEmpresaValues"
                   :key="empresa.codigo"
@@ -218,21 +173,66 @@ onMounted(() => {
                 >
                   {{ empresa.nome_fantasia }}
                 </option>
-              </select>
-              <div class="mb-3">
-                <label for="registerPassword" class="form-label">Senha</label>
-                <input
-                  v-model="registerForm.sSenha"
-                  type="password"
-                  class="form-control"
-                  id="registerPassword"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary">Cadastrar</button>
-            </form>
-            <br />
+            </select>
           </div>
-          <br />
+
+          <!-- Senha -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Senha
+            </label>
+            <input type="password" v-model="registerForm.sSenha"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50" />
+          </div>
+        </div>
+        <!-- Card formulário login -->
+        <div v-if="tabAtual == 'login'"
+          class="bg-slate-200 border border-t-0 border-gray-300 shadow-lg p-4 sm:p-6 md:p-8 space-y-6">
+          <!-- Usuário -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Usuário
+            </label>
+            <input type="text" v-model="loginForm.sNomeUsuario"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50" />
+          </div>
+
+          <!-- Empresa -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Empresa
+            </label>
+            <select v-model="loginForm.nCodigoEmpresa"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50">
+              <option value="0">Selecione uma empresa</option>
+                <option
+                  v-for="empresa in cboEmpresaValues"
+                  :key="empresa.codigo"
+                  :value="empresa.codigo"
+                >
+                  {{ empresa.nome_fantasia }}
+                </option>
+            </select>
+          </div>
+
+          <!-- Senha -->
+          <div>
+            <label class="block text-sm sm:text-base font-medium text-gray-700">
+              Senha
+            </label>
+            <input type="password" v-model="loginForm.sSenha"
+              class="w-full rounded-md border border-slate-300 px-3 py-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-slate-50" />
+          </div>
+        </div>
+        <div class="flex bg-slate-200 border border-gray-300 rounded-b-lg shadow-lg">
+          <button v-if="tabAtual == 'cadastro'" @click="btnCadastroClick()"
+            class="flex-1 text-center py-2 font-medium text-gray-700 hover:bg-indigo-300 hover:outline-indigo-600 hover:outline-2 hover:rounded-4xl">
+            Cadastrar novo Usuário
+          </button>
+          <button v-if="tabAtual == 'login'" @click="btnLogarClick()"
+            class="flex-1 text-center py-2 font-medium text-gray-700 hover:bg-indigo-300 hover:outline-indigo-600 hover:outline-2 hover:rounded-4xl">
+            Entrar
+          </button>
         </div>
       </div>
     </div>
