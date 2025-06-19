@@ -4,6 +4,10 @@ import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import router from '@/router'
+
+const bGatilhoModalCofirmacao = ref<boolean>(false)
+const bGatilhoModalCofirmacaoDelete = ref<boolean>(false)
 
 interface stFormInfo {
   sRazaoSocialParceiro: string
@@ -11,7 +15,7 @@ interface stFormInfo {
   nCodigoTipoParceiro: number
   sTipoParceiroNegocio: string
   sEmailParceiro: string
-  sDocumentoParceiro : string
+  sDocumentoParceiro: string
   sTelefoneParceiro: string
   sContatoParceiro: string
   sLogradouro: string
@@ -77,32 +81,90 @@ const route = useRoute();
 const jwtToken = localStorage.getItem('jwtToken')
 
 const urlCodigoParceiro: number | null = route.params.id === undefined || isNaN(Number(route.params.id))
-    ? null
-    : Number(route.params.id);
+  ? null
+  : Number(route.params.id);
+
+
+function GerenciaModalConfirmacaoEnviar(bool: Boolean) {
+  try {
+
+    if (bool) {
+
+      bGatilhoModalCofirmacao.value = false
+
+      axios.post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/upsert_parceiro', {
+        nCodigoParceiro: urlCodigoParceiro,
+        sRazaoSocial: stFormInfo.sRazaoSocialParceiro,
+        sNomeFantasia: stFormInfo.sNomeFantasiaParceiro,
+        sTipoParceiro: stFormInfo.sTipoParceiroNegocio,
+        nTipoParceiro: stFormInfo.nCodigoTipoParceiro,
+        sEmail: stFormInfo.sEmailParceiro,
+        sDocumento: stFormInfo.sDocumentoParceiro,
+        sTelefone: stFormInfo.sTelefoneParceiro,
+        sContato: stFormInfo.sContatoParceiro,
+        sLogradouro: stFormInfo.sLogradouro,
+        sBairro: stFormInfo.sBairroParceiro,
+        sComplemento: stFormInfo.sComplementoParceiro,
+        sNumero: stFormInfo.sNumeroParceiro,
+        sCep: stFormInfo.sCepParceiro,
+        nCodigoPais: stFormInfo.nCodigoPaisParceiro,
+        nCodigoCidade: stFormInfo.nCodigoCidadeParceiro,
+        nCodigoEstado: stFormInfo.nCodigoEstadoParceiro,
+      })
+        .catch((error) => console.log(error))
+    }
+
+    router.push('/listaparceiro')
+
+  } catch (error) {
+    console.error(error)
+    alert('Ocorreu um erro. Por favor, tente novamente.')
+  }
+
+}
+
+function GerenciaModalConfirmacaoDeleteEnviar(bool: Boolean) {
+  try {
+
+    if (bool) {
+
+      bGatilhoModalCofirmacao.value = false
+
+      axios.post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/delete_parceiro', {
+        nCodigoParceiro: urlCodigoParceiro
+      })
+        .catch((error) => console.log(error))
+    }
+
+    router.push('/listaparceiro')
+
+  } catch (error) {
+    console.error(error)
+    alert('Ocorreu um erro. Por favor, tente novamente.')
+  }
+
+}
 
 function btnEnviarClick() {
-  //console.log(urlCodigoParceiro)
-  axios
-    .post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/upsert_parceiro', {
-      nCodigoParceiro : urlCodigoParceiro,
-      sRazaoSocial: stFormInfo.sRazaoSocialParceiro,
-      sNomeFantasia: stFormInfo.sNomeFantasiaParceiro,
-      sTipoParceiro: stFormInfo.sTipoParceiroNegocio,
-      nTipoParceiro: stFormInfo.nCodigoTipoParceiro,
-      sEmail: stFormInfo.sEmailParceiro,
-      sDocumento : stFormInfo.sDocumentoParceiro,
-      sTelefone: stFormInfo.sTelefoneParceiro,
-      sContato: stFormInfo.sContatoParceiro,
-      sLogradouro: stFormInfo.sLogradouro,
-      sBairro: stFormInfo.sBairroParceiro,
-      sComplemento: stFormInfo.sComplementoParceiro,
-      sNumero: stFormInfo.sNumeroParceiro,
-      sCep: stFormInfo.sCepParceiro,
-      nCodigoPais: stFormInfo.nCodigoPaisParceiro,
-      nCodigoCidade: stFormInfo.nCodigoCidadeParceiro,
-      nCodigoEstado: stFormInfo.nCodigoEstadoParceiro,
-    })
-    .catch((error) => console.log(error))
+  try {
+
+    bGatilhoModalCofirmacao.value = true
+
+  } catch (error) {
+    console.error(error)
+    alert('Ocorreu um erro. Por favor, tente novamente.')
+  }
+}
+
+function btnExcluirClick() {
+  try {
+
+    bGatilhoModalCofirmacaoDelete.value = true
+
+  } catch (error) {
+    console.error(error)
+    alert('Ocorreu um erro. Por favor, tente novamente.')
+  }
 }
 
 async function LoadComboTipoParceiro() {
@@ -150,23 +212,23 @@ async function loadComboEstado() {
   }
 }
 
-async function LoadDadosParceiro(nCodigoParceiro : number | null) {
+async function LoadDadosParceiro(nCodigoParceiro: number | null) {
 
   if (nCodigoParceiro != null) {
 
-      try {
+    try {
 
-        const response = await axios.post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/lista_unico',
-          {nCodigoParceiro : nCodigoParceiro},
-          {headers: {Authorization: `Bearer ${jwtToken}`} }
-        )
+      const response = await axios.post(import.meta.env.VITE_DEFAULT_API_LINK + '/cadparceiros/lista_unico',
+        { nCodigoParceiro: nCodigoParceiro },
+        { headers: { Authorization: `Bearer ${jwtToken}` } }
+      )
 
-        DadosParceiro.value  = response.data
-        Object.assign(stFormInfo, response.data[0])
+      DadosParceiro.value = response.data
+      Object.assign(stFormInfo, response.data[0])
 
-      } catch (error) {
-        console.log("erro ao carregar dados do parceiro", error)
-      }
+    } catch (error) {
+      console.log("erro ao carregar dados do parceiro", error)
+    }
 
   }
 }
@@ -197,10 +259,69 @@ onMounted(() => {
 </script>
 <template>
   <main class="min-h-screen bg-slate-100 py-4">
+
+    <!-- Modal Confirmação envio -->
+    <div v-if="bGatilhoModalCofirmacao" class="fixed inset-0 z-50 flex items-center justify-center">
+      <!-- Overlay com blur - NÃO fecha ao clicar -->
+      <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+      <!-- Container do Modal -->
+      <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+
+        <!-- Conteúdo do Modal -->
+        <div class="mt-4">
+          <h2 class="text-xl font-bold mb-4">Atualizar dados</h2>
+          <p>Deseja confirmar a operação?</p>
+          <div class="flex flex-row justify-end space-x-4 pt-2">
+            <!-- Botão Cancelar -->
+            <div class="text-right">
+              <button v-if="urlCodigoParceiro" @click="bGatilhoModalCofirmacao = false"
+                class="px-6 py-2 bg-red-500 text-white rounded-md  hover:bg-red-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Cancelar</button>
+            </div>
+
+            <!-- Botão Confirmar -->
+            <div class="text-right">
+              <button @click="GerenciaModalConfirmacaoEnviar(true)"
+                class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação delete -->
+     <div v-if="bGatilhoModalCofirmacaoDelete" class="fixed inset-0 z-50 flex items-center justify-center">
+      <!-- Overlay com blur - NÃO fecha ao clicar -->
+      <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+      <!-- Container do Modal -->
+      <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+
+        <!-- Conteúdo do Modal -->
+        <div class="mt-4">
+          <h2 class="text-xl font-bold mb-4">Deletar dados</h2>
+          <p>Deseja confirmar a Exclusão?</p>
+          <div class="flex flex-row justify-end space-x-4 pt-2">
+            <!-- Botão Cancelar -->
+            <div class="text-right">
+              <button v-if="urlCodigoParceiro" @click="bGatilhoModalCofirmacao = false"
+                class="px-6 py-2 bg-red-500 text-white rounded-md  hover:bg-red-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Cancelar</button>
+            </div>
+
+            <!-- Botão Confirmar -->
+            <div class="text-right">
+              <button @click="GerenciaModalConfirmacaoDeleteEnviar(true)"
+                class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Container com largura máxima maior em desktop -->
     <div class="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-screen-xl bg-white rounded-lg shadow-lg p-6">
       <h1 class="text-center text-2xl font-semibold mb-6 text-gray-800">Cadastro de Parceiros de Negócio</h1>
-      <form @submit.prevent="btnEnviarClick" class="space-y-6">
+      <div class="space-y-6">
         <!-- Datas -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -217,39 +338,23 @@ onMounted(() => {
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Razão Social</label>
-            <input
-              v-model="stFormInfo.sRazaoSocialParceiro"
-              type="text"
-              required
-              placeholder="Insira a razão social"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sRazaoSocialParceiro" type="text" required placeholder="Insira a razão social"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Nome Fantasia</label>
-            <input
-              v-model="stFormInfo.sNomeFantasiaParceiro"
-              type="text"
-              required
-              placeholder="Insira o Nome Fantasia"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sNomeFantasiaParceiro" type="text" required placeholder="Insira o Nome Fantasia"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
         </div>
 
         <!-- Tipo Parceiro -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Tipo Parceiro</label>
-          <select
-            v-model="stFormInfo.sTipoParceiroNegocio"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-          >
+          <select v-model="stFormInfo.sTipoParceiroNegocio"
+            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300">
             <option :value="null">Selecione o Tipo de Parceiro</option>
-            <option
-              v-for="tipo in stCboTipoParceiro"
-              :key="tipo.nCodigoTipoParceiro"
-              :value="tipo.sTipoParceiro"
-            >
+            <option v-for="tipo in stCboTipoParceiro" :key="tipo.nCodigoTipoParceiro" :value="tipo.sTipoParceiro">
               {{ tipo.sTipoParceiro }}
             </option>
           </select>
@@ -259,30 +364,18 @@ onMounted(() => {
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">E-Mail</label>
-            <input
-              v-model="stFormInfo.sEmailParceiro"
-              type="email"
-              placeholder="Insira o E-mail"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sEmailParceiro" type="email" placeholder="Insira o E-mail"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Telefone</label>
-            <input
-              v-model="stFormInfo.sTelefoneParceiro"
-              type="tel"
-              placeholder="Insira o Telefone"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sTelefoneParceiro" type="tel" placeholder="Insira o Telefone"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Contato</label>
-            <input
-              v-model="stFormInfo.sContatoParceiro"
-              type="text"
-              placeholder="Insira o Contato"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sContatoParceiro" type="text" placeholder="Insira o Contato"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
         </div>
 
@@ -290,51 +383,31 @@ onMounted(() => {
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Logradouro</label>
-            <input
-              v-model="stFormInfo.sLogradouro"
-              type="text"
-              placeholder="Insira o logradouro"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            />
+            <input v-model="stFormInfo.sLogradouro" type="text" placeholder="Insira o logradouro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700">Bairro</label>
-              <input
-                v-model="stFormInfo.sBairroParceiro"
-                type="text"
-                placeholder="Insira o Bairro"
-                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-              />
+              <input v-model="stFormInfo.sBairroParceiro" type="text" placeholder="Insira o Bairro"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">Complemento</label>
-              <input
-                v-model="stFormInfo.sComplementoParceiro"
-                type="text"
-                placeholder="Complemento (opcional)"
-                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-              />
+              <input v-model="stFormInfo.sComplementoParceiro" type="text" placeholder="Complemento (opcional)"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700">Número</label>
-              <input
-                v-model="stFormInfo.sNumeroParceiro"
-                type="text"
-                placeholder="Insira o N°"
-                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-              />
+              <input v-model="stFormInfo.sNumeroParceiro" type="text" placeholder="Insira o N°"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">CEP</label>
-              <input
-                v-model="stFormInfo.sCepParceiro"
-                type="text"
-                placeholder="Insira o CEP"
-                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-              />
+              <input v-model="stFormInfo.sCepParceiro" type="text" placeholder="Insira o CEP"
+                class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300" />
             </div>
           </div>
         </div>
@@ -343,10 +416,8 @@ onMounted(() => {
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">País</label>
-            <select
-              v-model="stFormInfo.nCodigoPaisParceiro"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            >
+            <select v-model="stFormInfo.nCodigoPaisParceiro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300">
               <option v-for="pais in stCboPais" :key="pais.nCodigoPais" :value="pais.nCodigoPais">
                 {{ pais.sNomePais }}
               </option>
@@ -354,37 +425,39 @@ onMounted(() => {
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Estado</label>
-            <select
-              v-model="stFormInfo.nCodigoEstadoParceiro"
-              @change="ComboEstadoSelectedChange"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            >
+            <select v-model="stFormInfo.nCodigoEstadoParceiro" @change="ComboEstadoSelectedChange"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300">
               <option :value="null">Selecione um estado</option>
-              <option v-for="estado in stCboEstado" :key="estado.nCodigoEstado" :value="estado.nCodigoEstado">{{ estado.sNomeEstado }}</option>
+              <option v-for="estado in stCboEstado" :key="estado.nCodigoEstado" :value="estado.nCodigoEstado">{{
+                estado.sNomeEstado }}</option>
             </select>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Cidade</label>
-            <select
-              v-model="stFormInfo.nCodigoCidadeParceiro"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300"
-            >
-              <option
-                v-for="cidade in stCboCidade"
-                :key="cidade.nCodigoCidade"
-                :value="cidade.nCodigoCidade"
-              >
+            <select v-model="stFormInfo.nCodigoCidadeParceiro"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-1 focus:ring-indigo-300">
+              <option v-for="cidade in stCboCidade" :key="cidade.nCodigoCidade" :value="cidade.nCodigoCidade">
                 {{ cidade.sDescricaoCidade }}
               </option>
             </select>
           </div>
         </div>
 
-        <!-- Botão Enviar -->
-        <div class="text-right">
-          <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Enviar</button>
+        <div class="flex flex-row justify-end space-x-4">
+          <!-- Botão Excluir -->
+          <div class="text-right">
+            <button v-if="urlCodigoParceiro" @click="btnExcluirClick"
+              class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-700">Excluir</button>
+          </div>
+
+          <!-- Botão Enviar -->
+          <div class="text-right">
+            <button @click="btnEnviarClick"
+              class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Enviar</button>
+          </div>
         </div>
-      </form>
+
+      </div>
     </div>
   </main>
 </template>
