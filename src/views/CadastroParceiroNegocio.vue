@@ -5,6 +5,7 @@ import axios from 'axios'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router'
+import ModalConfirmacao from '@/components/ModalConfirmacao.vue'
 
 const bGatilhoModalCofirmacao = ref<boolean>(false)
 const bGatilhoModalCofirmacaoDelete = ref<boolean>(false)
@@ -261,62 +262,31 @@ onMounted(() => {
   <main class="min-h-screen bg-slate-100 py-4">
 
     <!-- Modal Confirmação envio -->
-    <div v-if="bGatilhoModalCofirmacao" class="fixed inset-0 z-50 flex items-center justify-center">
-      <!-- Overlay com blur - NÃO fecha ao clicar -->
-      <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
-
-      <!-- Container do Modal -->
-      <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
-
-        <!-- Conteúdo do Modal -->
-        <div class="mt-4">
-          <h2 class="text-xl font-bold mb-4">Atualizar dados</h2>
-          <p>Deseja confirmar a operação?</p>
-          <div class="flex flex-row justify-end space-x-4 pt-2">
-            <!-- Botão Cancelar -->
-            <div class="text-right">
-              <button v-if="urlCodigoParceiro" @click="bGatilhoModalCofirmacao = false"
-                class="px-6 py-2 bg-red-500 text-white rounded-md  hover:bg-red-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Cancelar</button>
-            </div>
-
-            <!-- Botão Confirmar -->
-            <div class="text-right">
-              <button @click="GerenciaModalConfirmacaoEnviar(true)"
-                class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Confirmar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ModalConfirmacao 
+      v-if="bGatilhoModalCofirmacao"
+      titulo="Atualizar dados"
+      mensagem="Deseja confirmar a operação?"
+      textoBotaoConfirmar="Confirmar"
+      textoBotaoCancelar="Cancelar"
+      corBotaoConfirmar="indigo"
+      corBotaoCancelar="red"
+      @confirmar="() => GerenciaModalConfirmacaoEnviar(true)"
+      @cancelar="bGatilhoModalCofirmacao = false"
+    />
 
     <!-- Modal Confirmação delete -->
-     <div v-if="bGatilhoModalCofirmacaoDelete" class="fixed inset-0 z-50 flex items-center justify-center">
-      <!-- Overlay com blur - NÃO fecha ao clicar -->
-      <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+     <ModalConfirmacao 
+      v-if="bGatilhoModalCofirmacaoDelete"
+      titulo="Deletar dados"
+      mensagem="Deseja confirmar a exclusão?"
+      textoBotaoConfirmar="Confirmar"
+      textoBotaoCancelar="Cancelar"
+      corBotaoConfirmar="indigo"
+      corBotaoCancelar="red"
+      @confirmar="() => GerenciaModalConfirmacaoDeleteEnviar(true)"
+      @cancelar="bGatilhoModalCofirmacaoDelete = false"
+    />
 
-      <!-- Container do Modal -->
-      <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
-
-        <!-- Conteúdo do Modal -->
-        <div class="mt-4">
-          <h2 class="text-xl font-bold mb-4">Deletar dados</h2>
-          <p>Deseja confirmar a Exclusão?</p>
-          <div class="flex flex-row justify-end space-x-4 pt-2">
-            <!-- Botão Cancelar -->
-            <div class="text-right">
-              <button v-if="urlCodigoParceiro" @click="bGatilhoModalCofirmacao = false"
-                class="px-6 py-2 bg-red-500 text-white rounded-md  hover:bg-red-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Cancelar</button>
-            </div>
-
-            <!-- Botão Confirmar -->
-            <div class="text-right">
-              <button @click="GerenciaModalConfirmacaoDeleteEnviar(true)"
-                class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-800 hover:outline-cyan-200 hover:outline-2 hover:rounded-4xl">Confirmar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Container com largura máxima maior em desktop -->
     <div class="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-screen-xl bg-white rounded-lg shadow-lg p-6">
