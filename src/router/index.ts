@@ -8,6 +8,7 @@ import ListaParceiroNegocio from '../views/ListaParceiroNegocio.vue'
 import TesteView from '../views/TestesView.vue'
 import OrdemServicoView from '../views/OrdemServicoView.vue'
 import CadastroAtivoView from '../views/CadastroAtivo.vue'
+import FabricanteView from '../views/CrudFabricante.vue'
 
 
 const router = createRouter({
@@ -72,6 +73,13 @@ const router = createRouter({
       name: 'cadastroAtivo',
       component: CadastroAtivoView,
       props: true,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/fabricante',
+      name: 'fabricante',
+      component: FabricanteView,
+      props: true, 
       meta: { requiresAuth: true }
     }
   ],

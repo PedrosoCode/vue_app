@@ -1,6 +1,5 @@
 <!-- ModalConfirmacao.vue -->
 <script setup lang="ts">
-import { defineEmits } from 'vue';
 
 const props = defineProps({
   titulo: {
