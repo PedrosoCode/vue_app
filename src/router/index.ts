@@ -9,6 +9,7 @@ import TesteView from '../views/TestesView.vue'
 import OrdemServicoView from '../views/OrdemServicoView.vue'
 import CadastroAtivo from '../views/CadastroAtivo.vue'
 import CrudFabricante from '../views/CrudFabricante.vue'
+import crudTecnico from '@/views/crudTecnico.vue'
 
 
 const router = createRouter({
@@ -79,6 +80,13 @@ const router = createRouter({
       path: '/fabricante',
       name: 'fabricante',
       component: CrudFabricante,
+      props: true, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/tecnico',
+      name: 'tecnico',
+      component: crudTecnico,
       props: true, 
       meta: { requiresAuth: true }
     }

@@ -52,14 +52,12 @@ function cancelar() {
         <p>{{ mensagem }}</p>
         <div class="flex flex-row justify-end space-x-4 pt-2">
           <!-- Botão Cancelar -->
-          <button @click="cancelar"
-            :class="`px-6 py-2 bg-${corBotaoCancelar}-500 text-white rounded-md hover:bg-${corBotaoCancelar}-800`">
+          <button @click="cancelar" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-800">
             {{ textoBotaoCancelar }}
           </button>
 
           <!-- Botão Confirmar -->
-          <button @click="confirmar"
-            :class="`px-6 py-2 bg-${corBotaoConfirmar}-500 text-white rounded-md hover:bg-${corBotaoConfirmar}-800`">
+          <button @click="confirmar" class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-800">
             {{ textoBotaoConfirmar }}
           </button>
         </div>
