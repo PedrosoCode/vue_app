@@ -185,7 +185,7 @@ async function loadComboPais() {
     stCboPais.value = response.data
     //console.log('Dados carregados:', stCboPais.value)
   } catch (error) {
-    console.error('Erro ao carregar empresas:', error)
+    console.error('Erro ao carregar países:', error)
   }
 }
 
